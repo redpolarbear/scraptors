@@ -2,6 +2,21 @@
 const express = require('express')
 const { Nuxt, Builder } = require('nuxt')
 const app = express()
+var path = require('path');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+
+var api = require('./routes/api');
+
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/api', api);
+
 const host = process.env.HOST || '127.0.0.1'
 const port = process.env.PORT || 3000
 
