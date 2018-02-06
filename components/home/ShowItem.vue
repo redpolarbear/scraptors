@@ -20,7 +20,7 @@
               <p class="mt-0">Color: {{ sku.colorName }}</p>
               <p>Price: {{ sku.price }}</p>
               <b-form-group id="sizeSelectGroup" label="Size:" label-for="sizeSelect">
-                <b-form-select multiple id="sizeSelect" v-if="sku.sizes" :select-size="4">
+                <b-form-select id="sizeSelect" v-if="sku.sizes" :select-size="4">
                   <option v-for="size in sku.sizes" :key="size" :value="size">{{ size }}</option>
                 </b-form-select>
                 <b-form-select id="sizeSelect" v-else>
@@ -55,7 +55,7 @@ export default {
     onNextStep (event) {
       event.preventDefault()
       this.$store.commit('COPY_TO_WEIDIAN_ITEM_STEP_1', { name: this.item.name })
-      this.$store.commit('INITIAL_SKU_IN_WEIDIAN_ITEM', { num: this.item.skus.length })
+      this.$store.commit('INITIAL_SKU_IN_WEIDIAN', { num: this.item.skus.length })
       this.$router.push('/wizard')
     }
   }

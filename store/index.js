@@ -66,15 +66,19 @@ const createStore = () => {
       COPY_TO_WEIDIAN_ITEM_STEP_1 (state, payload) {
         state.weidian.item.itemName = payload.name
       },
-      INITIAL_SKU_IN_WEIDIAN_ITEM (state, payload) {
+      INITIAL_SKU_IN_WEIDIAN (state, payload) {
         state.weidian.sku = []
         for (let i = 0; i < payload.num; i++) {
+          // const sku = {
+          //   title: '',
+          //   stock: 1,
+          //   price: '',
+          //   sku_merchant_code: '',
+          //   attr_ids: [],
+          //   img: ''
+          // }
           const sku = {
-            title: '',
-            stock: 1,
-            price: '',
-            sku_merchant_code: '',
-            attr_ids: [],
+            skuIndex: i,
             img: ''
           }
           state.weidian.sku.push(sku)
@@ -86,7 +90,7 @@ const createStore = () => {
       SET_WEIDIAN_SKU_IMAGE (state, payload) {
         state.weidian.sku[payload.index].img = payload.img
       },
-      SELECT_WEIDIAN_ITEM_ATTR_LIST (state, payload) {
+      SELECT_ATTR_TITLES_FOR_WEIDIAN_ITEM (state, payload) {
         if (state.weidian.item.hasOwnProperty('attr_list')) {
           const toRemove = _.differenceBy(state.weidian.item.attr_list, payload, 'attr_title')
           const toAdd = _.differenceBy(payload, state.weidian.item.attr_list, 'attr_title')
@@ -99,11 +103,25 @@ const createStore = () => {
           }
         }
       },
-      REMOVE_WEIDIAN_ITEM_ATTR_LIST (state) {
+      REMOVE_ATTR_TITLES_FROM_WEIDIAN_ITEM (state) {
         if (state.weidian.item.hasOwnProperty('attr_list')) {
           state.weidian.item = _.omit(state.weidian.item, 'attr_list')
         }
-      }
+      },
+      SELECT_ATTR_TITLES_FOR_WEIDIAN_SKU (state) {
+        let newSKU = _.clone(state.weidian.sku)
+        newSKU.forEach((e) => {
+          e.attr_list = state.weidian.item.attr_list
+        })
+        state.weidian.sku = newSKU
+      },
+      REMOVE_ATTR_TITLES_FROM_WEIDIAN_SKU (state) {
+        let newSKU = _.clone(state.weidian.sku)
+        for (let i = 0; i < newSKU.length; i ++) {
+          newSKU[i] = _.omit(newSKU[i], 'attr_list')
+        }
+        state.weidian.sku = newSKU
+      },
     },
     actions: {
       async SCRAPE_ITEM_BY_API ({commit}, payload) {
