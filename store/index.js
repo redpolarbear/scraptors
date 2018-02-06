@@ -109,18 +109,14 @@ const createStore = () => {
         }
       },
       SELECT_ATTR_TITLES_FOR_WEIDIAN_SKU (state) {
-        let newSKU = _.clone(state.weidian.sku)
-        newSKU.forEach((e) => {
-          e.attr_list = state.weidian.item.attr_list
+        state.weidian.sku = state.weidian.sku.map(e => {
+          return { ...e, attr_list: state.weidian.item.attr_list }
         })
-        state.weidian.sku = newSKU
       },
       REMOVE_ATTR_TITLES_FROM_WEIDIAN_SKU (state) {
-        let newSKU = _.clone(state.weidian.sku)
-        for (let i = 0; i < newSKU.length; i ++) {
-          newSKU[i] = _.omit(newSKU[i], 'attr_list')
-        }
-        state.weidian.sku = newSKU
+        state.weidian.sku = state.weidian.sku.map(e => {
+          return _.omit(e, 'attr_list')
+        })
       },
     },
     actions: {
