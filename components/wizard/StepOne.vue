@@ -16,7 +16,7 @@
           </b-button>
         </b-button-group>
         <b-button-group class="mx-1">
-          <b-btn variant="success" @click.stop="onImagesProcess(selected)" v-bind:disabled="selected.length === 0">Process</b-btn>
+          <b-btn variant="success" @click="onImagesProcess(selected)" v-bind:disabled="selected.length === 0">Process</b-btn>
         </b-button-group>
       </b-button-toolbar>
       <b-form-checkbox-group id="imgs" stacked v-model="selected" name="imgs" class="ml-4">
@@ -33,7 +33,7 @@
               </ul>
             </b-col>
             <b-col sm="auto">
-              <b-button @click.stop="onImageProcess(img, index)">
+              <b-button @click="onImageProcess(img, index)">
                 Process
               </b-button>
             </b-col>

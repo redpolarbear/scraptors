@@ -45,19 +45,23 @@
             <b-row v-for="list in weidian.sku[indx].attr_list" :key="list.attr_title">
               <b-button-group>
                 <b-button variant="outline-info" size="sm">{{ list.attr_title}}</b-button>
-                <b-button variant="outline-info" size="sm" @click="addAttrValues(indx, list.attr_title)">+</b-button>
+                <b-button variant="outline-info" size="sm" @click="onSelectAttrValues(indx, list.attr_title)">+</b-button>
               </b-button-group>
             </b-row>
           </b-media>
         </b-card>
       </b-col>
     </b-row>
+    <b-modal ref="attrValuesModal" title="Attribution Values" :lazy="true">
+      <app-step-two-attr-values-modal :attrList="attrList" :attrValuesSelected="attrValuesSelected"></app-step-two-attr-values-modal>
+    </b-modal>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import StepTwoAttrListModalComponent from './StepTwoAttrListModal'
+import StepTwoAttrValuesModalComponent from './StepTwoAttrValuesModal'
 
 export default {
   name: 'StepTwo',
@@ -65,13 +69,27 @@ export default {
     ...mapGetters({
       item: 'GET_ITEM',
       weidian: 'GET_WEIDIAN'
-    })
+    }),
+    attrList () {
+      return this.$store.getters.GET_WEIDIAN_ATTR_LIST_BY_TITLE(this.attrTitle)[0]
+    },
+    attrValuesSelected () {
+      const attr_list = this.$store.getters.GET_WEIDIAN_SKU_ATTR_LIST_BY_INDEX_AND_TITLE(this.attrTitle, this.skuIndex)[0]
+      if (attr_list.hasOwnProperty('attr_values')) {
+        return attr_list.attr_values
+      } else {
+        return []
+      }
+    }
   },
   components: {
-    'app-step-two-attr-list-modal': StepTwoAttrListModalComponent
+    'app-step-two-attr-list-modal': StepTwoAttrListModalComponent,
+    'app-step-two-attr-values-modal': StepTwoAttrValuesModalComponent
   },
   data () {
     return {
+      attrTitle: '',
+      skuIndex: null,
       skuSizesSelects: []
     }
   },
@@ -79,6 +97,11 @@ export default {
     handleImageDrop (index, data, event) {
       this.$store.commit('SET_WEIDIAN_SKU_IMAGE', { index, img: data.img })
     },
+    onSelectAttrValues (index, title) {
+      this.attrTitle = title
+      this.skuIndex = index
+      this.$refs.attrValuesModal.show()
+    }
   },
 }
 </script>

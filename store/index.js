@@ -48,6 +48,9 @@ const createStore = () => {
       },
       GET_WEIDIAN_SKU: (state) => {
         return state.weidian.sku
+      },
+      GET_WEIDIAN_SKU_ATTR_LIST_BY_INDEX_AND_TITLE: (state) => {
+        return (title, index) => state.weidian.sku[index].attr_list.filter(item => item.attr_title === title)
       }
     },
     mutations: {
